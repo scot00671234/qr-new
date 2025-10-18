@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QR Pro - Generate clean, professional QR codes instantly. Free, fast, and minimalist QR code generator with no watermarks.">
+    <meta name="keywords" content="QR code, generator, free, professional, minimalist, clean, instant">
+    <meta name="author" content="QR Pro">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://qrpro.dev/">
+    <meta property="og:title" content="QR Pro - Professional QR Code Generator">
+    <meta property="og:description" content="Generate clean, professional QR codes instantly. Free, fast, and minimalist QR code generator with no watermarks.">
+    <meta property="og:image" content="https://qrpro.dev/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://qrpro.dev/">
+    <meta property="twitter:title" content="QR Pro - Professional QR Code Generator">
+    <meta property="twitter:description" content="Generate clean, professional QR codes instantly. Free, fast, and minimalist QR code generator with no watermarks.">
+    <meta property="twitter:image" content="https://qrpro.dev/logo.png">
+
+    <title>QR Pro - Professional QR Code Generator</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/src/main.ts" as="script">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Theme color -->
+    <meta name="theme-color" content="#3b82f6">
+    
+    <!-- Google Site Verification -->
+    <meta name="google-site-verification" content="your-verification-code-here">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4669482504741834"
+            crossorigin="anonymous"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #fafbfc;
+            --bg-tertiary: #f1f3f4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-light: #e0e7ff;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --success: #059669;
+            --error: #dc2626;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #0a0a0a;
+                --bg-secondary: #111111;
+                --bg-tertiary: #1a1a1a;
+                --text-primary: #ffffff;
+                --text-secondary: #a1a1aa;
+                --text-muted: #71717a;
+                --border: #27272a;
+                --border-light: #3f3f46;
+                --accent: #6366f1;
+                --accent-hover: #4f46e5;
+                --accent-light: #1e1b4b;
+                --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: 16px;
+            letter-spacing: -0.01em;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .navbar {
+                background: rgba(10, 10, 10, 0.8);
+            }
+        }
+        
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-logo:hover {
+            color: var(--accent);
+            transform: translateY(-1px);
+        }
+        
+        .navbar-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent-gradient);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: var(--shadow);
+        }
+        
+        .navbar-nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .navbar-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+            position: relative;
+            background: transparent;
+        }
+        
+        .navbar-nav a:hover {
+            color: var(--accent);
+            background: var(--accent-light);
+            transform: translateY(-1px);
+        }
+        
+        .navbar-nav a.active {
+            color: var(--accent);
+            background: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        .navbar-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu-toggle:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .header {
+            padding: 6rem 0 0.5rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 1px;
+        }
+        
+        .logo {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 2rem;
+            background: var(--accent-gradient);
+            border-radius: var(--radius-2xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            box-shadow: var(--shadow-xl);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        
+        .logo:hover::before {
+            opacity: 1;
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+        
+        .logo:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0.5rem;
+        }
+        
+        .subtitle-secondary {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+        
+        .main {
+            padding: 0;
+        }
+        
+        .generator-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-2xl);
+            padding: 3.5rem;
+            box-shadow: var(--shadow-2xl);
+            max-width: 680px;
+            margin: -0.5rem auto 0;
+            position: relative;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+        }
+        
+        .generator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.5;
+        }
+        
+        .generator-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
+        }
+        
+        .input {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-xl);
+            font-size: 1.1rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: 400;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-light);
+            transform: translateY(-1px);
+        }
+        
+        .input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .option-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            letter-spacing: 0.01em;
+        }
+        
+        .option-group select {
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .option-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: var(--radius-xl);
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            letter-spacing: 0.01em;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .generate-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .generate-btn:disabled::before {
+            display: none;
+        }
+        
+        .result {
+            margin-top: 1.5rem;
+            text-align: center;
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .qr-container {
+            background: var(--bg-primary);
+            padding: 3rem;
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-2xl);
+            margin-bottom: 2rem;
+            display: inline-block;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qr-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.6;
+        }
+        
+        .qr-code {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.125rem 2.25rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-xl);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-light), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .download-btn:hover::before {
+            left: 100%;
+        }
+        
+        .download-btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .footer {
+            padding: 4rem 0 3rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-top: 6rem;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+        
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .footer-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .about-page {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        .about-hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .about-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .about-hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .about-content {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-2xl);
+            padding: 3.5rem;
+            box-shadow: var(--shadow-2xl);
+            margin-bottom: 2rem;
+        }
+        
+        .about-section {
+            margin-bottom: 3rem;
+        }
+        
+        .about-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .about-section h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .about-section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .about-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .about-section ul {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .about-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--accent-gradient);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .ad-container {
+            margin: 2rem 0;
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        .ad-banner {
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .adsbygoogle {
+            display: block !important;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-primary);
+                border-top: 1px solid var(--border);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--shadow-lg);
+            }
+            
+            .navbar-nav.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .title {
+                font-size: 3rem;
+            }
+            
+            .subtitle {
+                font-size: 1.125rem;
+            }
+            
+            .generator-card {
+                padding: 2.5rem;
+                margin: 0 1rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .ad-container {
+                margin: 1.5rem 0;
+            }
+            
+            .header {
+                padding: 3rem 0 1.5rem;
+            }
+            
+            .main {
+                padding: 1rem 0;
+            }
+            
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                padding: 2rem;
+                margin: 0 1rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .generator-card {
+                padding: 2rem;
+                margin: 0 0.5rem;
+            }
+            
+            .logo {
+                width: 64px;
+                height: 64px;
+                font-size: 28px;
+            }
+            
+            .about-content {
+                padding: 2rem;
+                margin: 0 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#" class="navbar-logo" data-page="home">
+                <div class="navbar-logo-icon">QR</div>
+                QR Pro
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="#" class="nav-link" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-page="about">About</a></li>
+            </ul>
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <header class="header">
+                <div class="logo">QR</div>
+                <h1 class="title">QR Pro</h1>
+                <p class="subtitle">Generate clean, professional QR codes instantly</p>
+                <p class="subtitle-secondary">Free, fast, and secure • No registration required</p>
+            </header>
+        
+        <main class="main">
+            <!-- Ad Placement 1: Top Banner -->
+            <div class="ad-container ad-banner">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4669482504741834"
+                     data-ad-slot="YOUR_TOP_AD_SLOT_ID"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+            
+            <div class="generator-card">
+                <div class="input-group">
+                    <label for="text-input" class="label">Enter text or URL</label>
+                    <input 
+                        type="text" 
+                        id="text-input" 
+                        class="input" 
+                        placeholder="https://example.com or any text..."
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div class="options">
+                    <div class="option-group">
+                        <label for="size-select">Size</label>
+                        <select id="size-select">
+                            <option value="200">200x200</option>
+                            <option value="300" selected>300x300</option>
+                            <option value="400">400x400</option>
+                            <option value="500">500x500</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="error-level">Error Correction</label>
+                        <select id="error-level">
+                            <option value="L">Low (7%)</option>
+                            <option value="M" selected>Medium (15%)</option>
+                            <option value="Q">Quartile (25%)</option>
+                            <option value="H">High (30%)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="generate-btn" class="generate-btn">
+                    Generate QR Code
+                </button>
+                
+                <div id="result" class="result">
+                    <div class="qr-container">
+                        <canvas id="qr-canvas" class="qr-code"></canvas>
+                    </div>
+                    <a id="download-btn" class="download-btn" download="qr-code.png">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7,10 12,15 17,10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download PNG
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Ad Placement 2: Bottom Banner -->
+            <div class="ad-container ad-banner">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4669482504741834"
+                     data-ad-slot="YOUR_BOTTOM_AD_SLOT_ID"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </main>
+        </div>
+        
+        <!-- About Page -->
+        <div id="about-page" class="page about-page">
+            <div class="about-hero">
+                <h1>About QR Pro</h1>
+                <p>Professional QR code generation made simple, fast, and secure</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-section">
+                    <h2>What is QR Pro?</h2>
+                    <p>QR Pro is a modern, minimalist QR code generator designed to create clean, professional QR codes instantly. Built with performance and user experience in mind, QR Pro offers a fast, secure, and ad-free solution for all your QR code generation needs.</p>
+                    
+                    <p>Whether you need QR codes for business cards, marketing materials, websites, or personal use, QR Pro provides the tools you need to create high-quality codes that work reliably across all devices and platforms.</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Key Features</h2>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <h3>Lightning Fast</h3>
+                            <p>Generate QR codes instantly with our optimized algorithms and modern web technologies.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎨</div>
+                            <h3>Clean Design</h3>
+                            <p>Professional, minimalist interface that focuses on what matters most - creating great QR codes.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔒</div>
+                            <h3>Privacy First</h3>
+                            <p>All processing happens locally in your browser. Your data never leaves your device.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📱</div>
+                            <h3>Mobile Friendly</h3>
+                            <p>Fully responsive design that works perfectly on all devices and screen sizes.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚙️</div>
+                            <h3>Customizable</h3>
+                            <p>Choose from multiple sizes and error correction levels to fit your specific needs.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💾</div>
+                            <h3>Easy Download</h3>
+                            <p>Download your QR codes as high-quality PNG files with a single click.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h2>How It Works</h2>
+                    <p>QR Pro uses advanced QR code generation algorithms to create reliable, scannable codes from any text or URL input. Here's how simple it is:</p>
+                    <ul>
+                        <li><strong>Enter your content:</strong> Type any text, URL, or data you want to encode</li>
+                        <li><strong>Choose your settings:</strong> Select the size and error correction level that works best for your use case</li>
+                        <li><strong>Generate instantly:</strong> Click the generate button and watch your QR code appear in seconds</li>
+                        <li><strong>Download and use:</strong> Save your QR code as a PNG file and use it anywhere</li>
+                    </ul>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Technical Details</h2>
+                    <p>QR Pro is built using modern web technologies to ensure the best possible performance and user experience:</p>
+                    <ul>
+                        <li><strong>TypeScript:</strong> Type-safe development for reliable, maintainable code</li>
+                        <li><strong>Vite:</strong> Lightning-fast build tool for optimal development and production builds</li>
+                        <li><strong>QRCode.js:</strong> Industry-standard QR code generation library</li>
+                        <li><strong>Modern CSS:</strong> Responsive design with CSS Grid and Flexbox</li>
+                        <li><strong>Progressive Web App:</strong> Fast loading and offline-capable functionality</li>
+                    </ul>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Why Choose QR Pro?</h2>
+                    <p>In a world full of QR code generators, QR Pro stands out by focusing on what really matters:</p>
+                    <ul>
+                        <li><strong>No watermarks:</strong> Your QR codes are clean and professional</li>
+                        <li><strong>No registration required:</strong> Start generating immediately</li>
+                        <li><strong>No data collection:</strong> Your privacy is protected</li>
+                        <li><strong>Open source:</strong> Transparent and community-driven development</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <div class="footer-content">
+                <h3 class="footer-title">QR Pro</h3>
+                <p class="footer-description">
+                    Professional QR code generation made simple. Create high-quality QR codes instantly with our clean, fast, and secure platform.
+                </p>
+                <div class="footer-meta">
+                    © 2025 QR Pro. All rights reserved. | Built with TypeScript & Vite | Privacy-focused
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
